@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Top human-caused threats to birds in US in 2017</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap"
+        rel="stylesheet">
+    <favicon href="favicon.ico" />
+</head>
+
+<body>
+    <div class="chart-wrap">
+        <div class="header">
+            <h1>Top human-caused threats to birds in US in 2017</h1>
+            <p>Source: <a href="https://x.com/simongerman600/status/1937226450026864763" target="_blank"
+                    rel="noopener">X, from U.S. Fish & Wildlife Service</a></p>
+        </div>
+        <div class="chart-container">
+            <div id="viz"></div>
+            <div class="legend" id="legend"></div>
+        </div>
+    </div>
+
+    <div id="tooltip" class="tooltip"></div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        const data = [
+            { label: 'Collisions', value: 845000000, color: '#346563' },
+            { label: 'Poison', value: 72000000, color: '#626a37' },
+            { label: 'Electrocutions', value: 5600000, color: '#efb82a' },
+            { label: 'Oil pits', value: 750000, color: '#fadfb5' }
+        ];
+
+        // Détails pour les collisions
+        const details = {
+            'Collisions': [
+                { label: 'Buildings & glass', value: 599000000 },
+                { label: 'Vehicles', value: 55000000 },
+                { label: 'Electrical lines & turbines', value: 32300000 }
+            ]
+        };
+
+        const width = 400;
+        const height = 400;
+        const radius = Math.min(width, height) / 2;
+
+        const svg = d3.select('#viz')
+            .append('svg')
+            .attr('width', '100%')
+            .attr('height', '100%')
+            .attr('viewBox', `0 0 ${width} ${height}`)
+            .append('g')
+            .attr('transform', `translate(${width / 2}, ${height / 2})`);
+
+        const pie = d3.pie()
+            .value(d => d.value)
+            .sort(null);
+
+        const arc = d3.arc()
+            .innerRadius(radius * 0.5) // donut
+            .outerRadius(radius);
+
+        const slices = svg.selectAll('path')
+            .data(pie(data))
+            .join('path')
+            .attr('class', 'slice')
+            .attr('d', arc)
+            .attr('fill', d => d.data.color)
+            .on('mouseenter', (event, d) => {
+                let html = `<strong>${d.data.label}</strong><br/>${d.data.value.toLocaleString()}`;
+                if (details[d.data.label]) {
+                    html += '<br/><em>Breakdown:</em><ul>';
+                    details[d.data.label].forEach(sub => {
+                        html += `<li>${sub.label}: ${sub.value.toLocaleString()}</li>`;
+                    });
+                    html += '</ul>';
+                }
+                d3.select('#tooltip')
+                    .style('display', 'block')
+                    .html(html);
+            })
+            .on('mousemove', (event) => {
+                d3.select('#tooltip')
+                    .style('left', (event.pageX + 12) + 'px')
+                    .style('top', (event.pageY + 12) + 'px');
+            })
+            .on('mouseleave', () => {
+                d3.select('#tooltip').style('display', 'none');
+            });
+
+        slices.transition()
+            .duration(1000)
+            .attrTween('d', function (d) {
+                const i = d3.interpolate({ startAngle: 0, endAngle: 0 }, d);
+                return t => arc(i(t));
+            });
+
+        // Légende
+        const legend = d3.select('#legend');
+        legend.selectAll('.legend-item')
+            .data(data)
+            .join('div')
+            .attr('class', 'legend-item')
+            .html(d => `
+        <div class="legend-color" style="background:${d.color}"></div>
+        ${d.label} (${d.value.toLocaleString()})
+      `);
+    </script>
+</body>
+
+</html>
