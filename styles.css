@@ -13,13 +13,22 @@ h1 {
     font-family: "Source Code Pro", monospace;
     font-size: 24px;
     margin: 0;
+    color: #e6eef8;
+    margin-bottom: 8px;
+}
+
+h2 {
+    font-family: "Source Code Pro", monospace;
+    font-size: 18px;
+    margin: 0;
+    color: #c0c0c0;
+    margin-bottom: 25px;
 }
 
 .chart-wrap {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 30px;
     width: 100%;
     max-width: fit-content;
 }
@@ -94,9 +103,16 @@ svg {
     margin-top: 4px;
     font-size: 13px;
     color: #969696;
+    margin-bottom: 40px;
+    text-align: right;
 }
 
 .header a {
     text-decoration: underline;
     color: #969696;
+}
+
+ul {
+    padding-left: 16px;
+    margin: 4px 0 0 0;
 }

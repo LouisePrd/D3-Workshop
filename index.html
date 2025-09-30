@@ -17,6 +17,7 @@
     <div class="chart-wrap">
         <div class="header">
             <h1>Top human-caused threats to birds in US in 2017</h1>
+            <h2>Estimated annual bird deaths by cause</h2>
             <p>Source: <a href="https://x.com/simongerman600/status/1937226450026864763" target="_blank"
                     rel="noopener">X, from U.S. Fish & Wildlife Service</a></p>
         </div>
@@ -75,7 +76,7 @@
             .on('mouseenter', (event, d) => {
                 let html = `<strong>${d.data.label}</strong><br/>${d.data.value.toLocaleString()}`;
                 if (details[d.data.label]) {
-                    html += '<br/><em>Breakdown:</em><ul>';
+                    html += '<ul>';
                     details[d.data.label].forEach(sub => {
                         html += `<li>${sub.label}: ${sub.value.toLocaleString()}</li>`;
                     });
@@ -87,8 +88,8 @@
             })
             .on('mousemove', (event) => {
                 d3.select('#tooltip')
-                    .style('left', (event.pageX + 12) + 'px')
-                    .style('top', (event.pageY + 12) + 'px');
+                    .style('left', (event.pageX + 10) + 'px')
+                    .style('top', (event.pageY + 10) + 'px');
             })
             .on('mouseleave', () => {
                 d3.select('#tooltip').style('display', 'none');
